@@ -4,7 +4,7 @@
 					<div class="main-header-left">
 						<a class="main-header-menu-icon d-lg-none" href="" id="mainNavShow"><span></span></a>
 						<a class="main-logo" href="{{url('/menu')}}">
-							TropicalYis
+							<img style="width: 45%;" src="{{URL::asset('assets/img/brand/logo-light.png')}}" class="header-brand-img desktop-logo" alt="logo">
 							{{-- <img src="{{URL::asset('assets/img/brand/logo.png')}}" class="header-brand-img desktop-logo" alt="logo">
 							<img src="{{URL::asset('assets/img/brand/logo-light.png')}}" class="header-brand-img desktop-logo theme-logo" alt="logo"> --}}
 						</a>

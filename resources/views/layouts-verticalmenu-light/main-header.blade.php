@@ -6,7 +6,7 @@
 					</div>
 					<div class="main-header-center">
 						<div class="responsive-logo">
-							<a href="{{url('/')}}"><img src="{{URL::asset('assets/img/brand/logo-light.png')}}" class="mobile-logo" alt="logo"></a>
+							<a style="width: 40%" href="{{url('/')}}"><img src="{{URL::asset('assets/img/brand/logo-light.png')}}" class="mobile-logo" alt="logo"></a>
 							<a href="{{url('/')}}"><img src="{{URL::asset('assets/img/brand/logo-light.png')}}" class="mobile-logo-dark" alt="logo"></a>
 						</div>
 					</div>
