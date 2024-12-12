@@ -56,10 +56,10 @@
 												</div>
 												<button class="btn ripple btn-main-primary btn-block">Iniciar</button>
 											</form>
-											<div class="text-left mt-5 ml-0">
-												{{-- <div class="mb-1"><a href="">Forgot password?</a></div> --}}
+											{{-- <div class="text-left mt-5 ml-0">
+												<div class="mb-1"><a href="">Forgot password?</a></div>
 												<div>No tienes cuenta? <a href="/registrar">Registrate</a></div>
-											</div>
+											</div> --}}
 
 										</div>
 									</div>
