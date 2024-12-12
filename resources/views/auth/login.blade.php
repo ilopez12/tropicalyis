@@ -28,15 +28,14 @@
 				<div class="col-md-12">
 					<div class="card">
 						<div class="row row-sm">
-							<div class="col-lg-6 col-xl-7 col-xs-12 col-sm-12" >
-								 <div class="pt-4 p-2 pos-absolute">
+							<div class="mt-5 col-lg-6 col-xl-5 d-none d-lg-block text-center">
+								{{-- <div class="mt-5 pt-4 p-2 pos-absolute"> --}}
 									{{-- <img src="{{URL::asset('assets/img/brand/logo-light.png')}}" class="header-brand-img mb-4" alt="logo"> --}}
 									{{-- <div class="clearfix"></div> --}}
 									<img src="{{URL::asset('assets/img/brand/logo1.png')}}" class="header-brand-img mb-4" alt="user">
-
 									{{-- <h5 class="mt-4 text-white">Create Your Account</h5>
 									<span class="tx-white-6 tx-13 mb-5 mt-xl-0">Signup to create, discover and connect with the global community</span> --}}
-								 </div>
+								{{-- </div> --}}
 							</div>
 							<div class="col-lg-6 col-xl-7 col-xs-12 col-sm-12 login_form ">
 								<div class="container-fluid">
@@ -57,10 +56,10 @@
 												</div>
 												<button class="btn ripple btn-main-primary btn-block">Iniciar</button>
 											</form>
-											{{-- <div class="text-left mt-5 ml-0">
-												
+											<div class="text-left mt-5 ml-0">
+												{{-- <div class="mb-1"><a href="">Forgot password?</a></div> --}}
 												<div>No tienes cuenta? <a href="/registrar">Registrate</a></div>
-											</div>--}}
+											</div>
 
 										</div>
 									</div>
