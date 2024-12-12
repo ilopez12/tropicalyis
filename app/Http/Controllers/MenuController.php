@@ -234,7 +234,7 @@ class MenuController extends Controller
         }
         // dd($pedido_detalle);
          // Ruta y nombre del archivo
-        //  $path = 'C:\xampp\htdocs\gvaldes2';
+        //  $path = 'C:\xampp\htdocs\TropicalYis2';
         $filename = 'archivo.txt';
 
         $file = fopen('php://temp', 'w');

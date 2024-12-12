@@ -2,7 +2,7 @@
 			<div class="main-sidebar main-sidebar-sticky side-menu">
 				<div class="sidemenu-logo">
 					<a class="main-logo" href="{{url('index')}}" style="color: white">
-						gvaldes
+						TropicalYis
 						{{-- <img src="{{URL::asset('assets/img/brand/logo-light.png')}}" class="header-brand-img desktop-logo" alt="logo">
 						<img src="{{URL::asset('assets/img/brand/icon-light.png')}}" class="header-brand-img icon-logo" alt="logo">
 						<img src="{{URL::asset('assets/img/brand/logo.png')}}" class="header-brand-img desktop-logo theme-logo" alt="logo">
