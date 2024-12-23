@@ -41,7 +41,7 @@
 						<li class="nav-item">
 							<a class="nav-link" href="{{url('menu')}}"><span class="shape1"></span><span class="shape2"></span><i class="si si-book-open sidemenu-icon"></i><span class="sidemenu-label">Vista Menú</span></a>
 						</li>
-						<li class="nav-header"><span class="nav-label">Reportes</span></li>
+						<!--<li class="nav-header"><span class="nav-label">Reportes</span></li>
 						<li class="nav-item">
 							<a class="nav-link with-sub" href="#"><span class="shape1"></span><span class="shape2"></span><i class="ti-agenda sidemenu-icon"></i><span class="sidemenu-label">Reportes</span><i class="angle fe fe-chevron-right"></i></a>
 							<ul class="nav-sub">
@@ -52,12 +52,12 @@
 									<a class="nav-sub-link" href="{{url('tabledata')}}">Data Tables</a>
 								</li>
 							</ul>
-						</li>
+						</li>-->
 						<li class="nav-header"><span class="nav-label">Administración de Usuarios</span></li>
 						<li class="nav-item">
 							<a class="nav-link" href="{{url('admin/user')}}"><span class="shape1"></span><span class="shape2"></span><i class="si si-people sidemenu-icon"></i><span class="sidemenu-label">Usuarios</span></a>
 						</li>
-						<li class="nav-item">
+						<!--<li class="nav-item">
 							<a class="nav-link with-sub" href="#"><span class="shape1"></span><span class="shape2"></span><i class="ti-package sidemenu-icon"></i><span class="sidemenu-label">Usuarios</span><i class="angle fe fe-chevron-right"></i></a>
 							<ul class="nav-sub">
 								<li class="nav-sub-item">
@@ -115,7 +115,7 @@
 									<a class="nav-sub-link" href="{{url('tags')}}">Tags</a>
 								</li>
 							</ul>
-						</li>
+						</li>-->
 						
 						
 						
