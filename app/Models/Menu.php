@@ -22,6 +22,17 @@ class Menu extends Model
        return $query;
     }
 
+    public static function getmenuprincipal($date){
+        //dd( $date);
+        
+        $query = Menu::where('verdesde', '<=',$date)
+                    ->where('verhasta', '>=',$date)                    
+                    ->where('tipo', 'Proteina')
+                    ->get();
+
+       return $query;
+    }
+
     public static function allMenu($date){
         $query = Menu::where('fecha', '=',$date)
                     ->get();
@@ -45,7 +56,17 @@ class Menu extends Model
 
        return $query;
     }
+    public static function getacompprincipal($date){
+        // dd( $date);
+        
+        $query = Menu:: where('verdesde', '<=',$date)
+                        ->where('verhasta', '>=',$date)
+                        ->where('tipo', 'Acomp')
+                        ->get();
 
+       return $query;
+    }
+        
     public static function getbyRango($desde, $hasta){
         // dd($desde, $hasta);
         $query = Menu::where('fecha', '>', $desde)
@@ -71,7 +92,9 @@ class Menu extends Model
         $tabla->costo_adicional =  $datos['adicional'];
         $tabla->restaurante =  $datos['restaurante'];
         $tabla->cantAcomp =  $datos['cantAcomp'];
-        $tabla->tipo_comida =  $datos['tipo_comida'];
+        $tabla->tipo_comida =  $datos['tipo_comida'];       
+        $tabla->cantidad =  $datos['cantidad'];
+
         
         $tabla->save();
         // dd('$desde');

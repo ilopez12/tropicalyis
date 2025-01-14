@@ -26,7 +26,9 @@ class temp_enc_pedido extends Model
         $tabla->total = $datos['total'];
         $tabla->restaurante = $datos['restaurante'];
         $tabla->cantidad = $datos['cantidad'];
-        $tabla->dato_adicional = $datos['datos_adicionales'];
+        $tabla->dato_adicional = $datos['datos_adicionales'];        
+        $tabla->dia = $datos['dia'];
+
         
         $tabla->save();
 

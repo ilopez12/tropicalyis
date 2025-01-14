@@ -66,6 +66,37 @@ class enc_pedido extends Model
         return $query;
       
     }
+    public static function getpedidosday($date){
+        $query = enc_pedido::where('dia', '=', $date)
+                            ->orderBy('usuario')
+                            ->get();
+
+        return $query;
+      
+    }
+
+    public static function getnoenviadosday($date){
+        $query = enc_pedido::where('dia', '=', $date)
+                            ->where(function($query) {
+                                $query->where('enviado', '=', 'NO')
+                                    ->orWhereNull('enviado'); // Agrega la condición de enviado IS NULL
+                            })
+                            ->orderBy('usuario')
+                            ->get();
+
+        return $query;
+      
+    }
+
+    public static function updatedenviados($id){
+        $tabla = enc_pedido::find($id);
+
+        $tabla->enviado = 'SI';
+
+        $tabla->save();
+
+        return $tabla;
+    }
     public static function getbyrango($desde, $hasta){
         $date1 = Carbon::parse($desde);
         $date1 = $date1->subDay();
@@ -105,6 +136,14 @@ class enc_pedido extends Model
     public static function getall($usuario){
         $query = enc_pedido::where('usuario', $usuario)
                                 ->get();
+
+        return $query;
+    }
+    public static function getfiltro($usuario, $desde, $hasta){
+        $query = enc_pedido::where('usuario', $usuario)
+                            ->where('fecha', '>=',$desde)                            
+                            ->where('fecha', '<=',$hasta)
+                            ->get();
 
         return $query;
     }

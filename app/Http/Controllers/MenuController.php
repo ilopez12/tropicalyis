@@ -30,11 +30,12 @@ class MenuController extends Controller
         $date = Carbon::now();
         $date->toDateString();
        
-        $menu = Menu::getmenu($date->toDateString());
+        $menu = Menu::getmenuprincipal($date->toDateString());
+        //dd($menu);
         
-        $acomp = Menu::getacomp($date->toDateString());
+        $acomp = Menu::getacompprincipal($date->toDateString());
         $restaurante = General::getactivos($date->toDateString());
-    
+       // dd( $restaurante);
         $carrito = temp_enc_pedido::getcarrito(Auth::user()->email);
         $ncantidad = count($carrito);
         
@@ -64,7 +65,7 @@ class MenuController extends Controller
         $date = Carbon::now();
         $date->toDateString();
 
-        $menu = enc_pedido::getbyday($date->toDateString());
+        $menu = enc_pedido::getpedidosday($date->toDateString());
         // dd($menu);
         $total_pedidos = count($menu);
         $total = 0;
@@ -103,7 +104,7 @@ class MenuController extends Controller
                         $det_pedido = $val2->cant. ' '.$val2->detalle;
                      
                     }else{
-                        $det_pedido = $det_pedido.', '. $val2->cant. ' '.$val2->detalle;
+                        $det_pedido = $det_pedido.', '.$val2->detalle;
                     }   
                 }
                 $total2 = $item->total * $item->cantidad;
@@ -166,7 +167,7 @@ class MenuController extends Controller
                         $det_pedido = $val2->cant. ' '.$val2->detalle;
                      
                     }else{
-                        $det_pedido = $det_pedido.', '. $val2->cant. ' '.$val2->detalle;
+                        $det_pedido = $det_pedido.', '.$val2->detalle;
                     }   
                     if($val2->tipo == 'Proteina'){
                         $encabezado = $val2->detalle;
@@ -187,15 +188,79 @@ class MenuController extends Controller
             }
             
                 // dd($arreglo);
+                $fecha = 'hasta el día '.Carbon::parse(date(now()))->locale('es')->translatedFormat('j \d\e F \d\e Y');
             
                 $carrito = temp_enc_pedido::getcarrito('ILOPEZ');
                 $ncantidad = count($carrito);
-            return view('user.pedidos', ['ordenes' => $arreglo, 'pendientes' => $ncantidad,'total' => $total, 'pedidos' =>$total_pedidos]);
+            return view('user.pedidos', ['ordenes' => $arreglo, 'pendientes' => $ncantidad,'total' => $total, 'pedidos' =>$total_pedidos,'fecha'=>$fecha]);
         }
        
 
     }
 
+    public function getcantidad(Request $dato){
+
+    }
+    public function filtro(Request $dato){
+       
+        MenuController::bloqueos();
+        $desde = Carbon::parse($dato->desde);
+        $hasta = Carbon::parse($dato->hasta);
+
+        $desde = $desde->subDay();
+        $hasta = $hasta->addDay();
+
+        $menu = enc_pedido::getfiltro(Auth::user()->email, $desde, $hasta);
+        if(count($menu) == 0){
+            return redirect()->back()->with('carrito_no', 'orden');
+        }else{
+            $total_pedidos = count($menu);
+            $total = 0;
+            $det_pedido = '';
+            $arreglo =[];
+            $encabezado = '';
+            foreach($menu as $item){
+                $total = $item->total + $total;
+                $detalle = det_pedido::getdetalle($item->id);
+                if($item->solicitante == null){
+                    $solicitante = 'PROPIO';
+                }else{
+                    $solicitante = $item->solicitante;
+                }
+                foreach($detalle as $k => $val2){
+                    if($k == 0 ){
+                        $det_pedido = $val2->cant. ' '.$val2->detalle;
+                     
+                    }else{
+                        $det_pedido = $det_pedido.', '.$val2->detalle;
+                    }   
+                    if($val2->tipo == 'Proteina'){
+                        $encabezado = $val2->detalle;
+                    }
+                }
+
+                $temp =[
+                    'orden_d' =>$solicitante,
+                    'encabezado' =>$encabezado,
+                    'detalle' =>$det_pedido,
+                    'total' =>$item->total,
+                    'estatus' => $item->estatus,
+                    'fecha' =>Carbon::parse($item->fecha)->format('d/m/Y'),
+
+                ];
+
+                array_push($arreglo, $temp);
+            }
+            
+                // dd($arreglo);
+            $fecha = 'desde el '.Carbon::parse($dato->desde)->locale('es')->translatedFormat('j \d\e F \d\e Y').' hasta el '.Carbon::parse($dato->hasta)->locale('es')->translatedFormat('j \d\e F \d\e Y');
+                $carrito = temp_enc_pedido::getcarrito('ILOPEZ');
+                $ncantidad = count($carrito);
+            return view('user.pedidos', ['ordenes' => $arreglo, 'pendientes' => $ncantidad,'total' => $total, 'pedidos' =>$total_pedidos, 'fecha'=>$fecha]);
+        }
+       
+
+    }
 
 
     public function generarenvio(){
@@ -205,19 +270,27 @@ class MenuController extends Controller
         $det_pedido = '';
         $monto = 0;
         $content = '';
-        $menu = enc_pedido::getbyday($date->toDateString());
+        $menu = enc_pedido::getnoenviadosday($date->toDateString());
+        $usuario = '';
+        //dd($menu);
         foreach($menu as $val){
-            
+            if( $usuario == ''){
+                $temp = [
+                    $val->usuario,
+                ];
+                array_push($pedido_detalle,$temp);
+                $usuario = $val->usuario;
+            }
             $pedidos2 = det_pedido::getdetalle($val->id); 
             $ordenado = $val->solicitante;
             $monto = $val->total;
             foreach($pedidos2 as $k => $val2){
                 
                 if($k == 0 ){
-                    $det_pedido = $val2->cant. ' '.$val2->detalle;
+                    $det_pedido = $val2->detalle;
                  
                 }else{
-                    $det_pedido = $det_pedido.', '. $val2->cant. ' '.$val2->detalle;
+                    $det_pedido = $det_pedido.', '.$val2->detalle;
                 }
                 
            
@@ -225,16 +298,23 @@ class MenuController extends Controller
             $det_pedido = $ordenado.'-'. $val->cantidad.' '.$det_pedido. ' '. $val2->dato_adicional;
             $content = $content.';\n'. $ordenado.' '.$det_pedido;
 
-               
+            if($usuario != $val->usuario){
+                $temp = [
+                    $val->usuario,
+                ];
+                array_push($pedido_detalle,$temp);
+                $usuario = $val->usuario;
+            }
             $temp = [
                 $det_pedido,
             ];
            array_push($pedido_detalle,$temp);
-         
+           enc_pedido::updatedenviados($val->id);
         }
         // dd($pedido_detalle);
          // Ruta y nombre del archivo
         //  $path = 'C:\xampp\htdocs\TropicalYis2';
+
         $filename = 'archivo.txt';
 
         $file = fopen('php://temp', 'w');
@@ -290,9 +370,9 @@ class MenuController extends Controller
     }
 
     public function addpedidos(Request $datos){
-        // dd( $datos);
+        
         try{
-
+           // dd($datos);
             if($datos->orden_propia == 'no'){
                 $solicitante = $datos->orden_dee;
             }else{
@@ -332,9 +412,12 @@ class MenuController extends Controller
                 'total' => $total,
                 'restaurante' => $data->restaurante,
                 'cantidad' => $datos->cantidad_r,
-                'datos_adicionales' =>  $datos->coments,
+                'datos_adicionales' =>  $datos->coments,                
+                'dia' =>  $datos->dia,
+
             ];
             //INSERTAR EL PEDIDO 
+            //dd( $data1);
             $encab = temp_enc_pedido::insertenc($data1);
 
             //INSERTA DETALLE
@@ -400,7 +483,7 @@ class MenuController extends Controller
     
         try{
         $pedidos = temp_enc_pedido::getcarrito(Auth::user()->email);
-
+           
         if(count($pedidos) == 0){
           
             return redirect()->back()->with('Sin', 'Acomp');
@@ -583,4 +666,15 @@ class MenuController extends Controller
         
         
     }
+
+    public function administrador(){
+
+       $restaurante =  general::getrestaurante();
+        return view('admin.menu',['listado' => $restaurante ] );
+    }
+    public function vermenu(){
+
+        $restaurante =  general::getrestaurante();
+         return view('admin.menu',['listado' => $restaurante ] );
+     }
 }

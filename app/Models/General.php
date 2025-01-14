@@ -39,9 +39,9 @@ class General extends Model
         $query = DB::table('restaurante')
             ->leftJoin('menu', 'menu.restaurante', 'restaurante.id')
             ->where('restaurante.estatus', 'ACTIVO')
-            ->where('menu.verdesde', '>=', $fecha)
-            // ->where('menu.verhasta', '<=', $fecha)
-            ->select('restaurante.*')
+            ->where('menu.verdesde', '<=', $fecha)
+             ->where('menu.verhasta', '>=', $fecha)
+            ->select('restaurante.*', 'menu.dia')
             ->distinct()
             ->get();
 

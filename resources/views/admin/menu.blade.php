@@ -5,7 +5,15 @@
 @endsection
 @section('content')
     @include('layout.response')
-
+    <script>
+        // Configura el valor mínimo del campo de fecha al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            const hoy = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato yyyy-mm-dd
+            document.getElementById('hasta').setAttribute('min', hoy); // Asigna el valor mínimo           
+            document.getElementById('desde').setAttribute('min', hoy); // Asigna el valor mínimo           
+            document.getElementById('dia').setAttribute('min', hoy); // Asigna el valor mínimo           
+        });
+    </script>
 <h3>Agregar Nuevo Menú </h3>
 
 {{-- <div class="card">
@@ -20,8 +28,11 @@
                 <div class="card-body">
                     <label class="form-label"> <strong>Seleccione Restaurante</strong></label>
                     <select class="form-control select-lg select2" name="lugar" id="lugar">
-                        <option value="1">Rest. Nuevo</option>
-                        <option value="2">Rest. Nuevo2</option>
+                        @foreach ($listado as $item)                           
+                        <option value="{{$item->id}}">{{$item->nombre}}</option>
+                        @endforeach
+                       
+                       
                     </select>
                 </div>
             </div>
@@ -46,23 +57,17 @@
                                 <th>Nombre</th>
                                 <th>Costo</th>
                                 <th>Presa Adicional</th>
-                                {{-- <th>Lugar</th> --}}
                                 <th>Cant. Acomp</th>
-                                <th>Tipo Comida</th>
+                                <th>Tipo Comida</th>                                
+                                <th>Cantidad Límitada</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody id="items">
-                            <tr>
+                            <tr id="body[0]">
                                 <td id="p[0]"style="width: 30%"><input type="text" class="form-control" name="proteina[0]" id="proteina[0]" aria-label="Recipient's username" aria-describedby="basic-addon2"></td>
                                 <td id="c[0]"><input type="text" class="form-control" name="costo[0]" id="costo[0]" aria-label="Recipient's username" aria-describedby="basic-addon2"></td>
                                 <td id="a[0]"><input type="text" class="form-control" name="adicionalP[0]" id="adicionalP[0]" aria-label="Recipient's username" aria-describedby="basic-addon2"></td>
-                                {{-- <td id="l[0]">
-                                    <select class="form-control" name="lugar[0]" id="lugar[0]">
-                                        <option value="1">Rest. Nuevo</option>
-                                        <option value="2">Rest. Nuevo2</option>
-                                    </select>
-                                </td> --}}
                                 <td id="cc[0]"><input type="number" class="form-control" name="cantacomp[0]" id="cantacomp[0]" value="3" aria-describedby="basic-addon2"></td>
                                 <td id="t[0]">
                                     <select class="form-control" name="tipo[0]" id="tipo[0]" onchange="verificafecha()">
@@ -72,16 +77,18 @@
                                         <option value="4">LASAGNA</option>
                                         <option value="5">POSTRE</option>
                                     </select>
-                                    <input type="hidden" value="SI" name="incluir['0']"  id="incluir['0']">
+                                    <input type="hidden" value="SI" name="incluir[0]"  id="incluir[0]">
                                 </td>
-                                <td><a onclick="deleteprot(0)" class="btn btn-success" style="color: white"><i class="fe fe-x-circle"></i></a></td>
+                                <td id="cl[0]"><input type="number" class="form-control" name="cantidad[0]" id="cantidad[0]" value="0" aria-describedby="basic-addon2"></td>
+                                    
+                                <td id="btn[0]"><a onclick="deleteprot(0)" class="btn btn-success" style="color: white"><i class="fe fe-x-circle"></i></a></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        <div class="col-12 mg-t-10">
+        <div class="col-6 mg-t-10">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -126,7 +133,7 @@
             </div>
         </div>
        
-       <div class="col-12 mg-t-10">
+       <div class="col-6 mg-t-10">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -135,15 +142,15 @@
                         </div>
                         <div class="col-sm-4">
                             <label for="">Mostrarlo Desde</label>
-                            <input type="date" name="desde" id="desde" class="form-control">
+                            <input onchange="validafecha('desde')" type="date" name="desde" id="desde" class="form-control" value="date(now)" required>
                         </div>
                         <div class="col-sm-4">
                             <label for=""> Mostrarlo Hasta</label>
-                            <input type="date" name="hasta" id="hasta" class="form-control">
+                            <input onchange="validafecha('hasta')" type="date" name="hasta" id="hasta" class="form-control" required readonly="true">
                         </div>
                         <div class="col-sm-4">
                             <label for="">Fecha de entrega de pedido</label>
-                            <input type="date" name="dia" id="dia" class="form-control">
+                            <input onchange="validafecha('dia')" type="date" name="dia" id="dia" class="form-control" required readonly="true">
                         </div>
                     </div>
                 </div>
@@ -183,6 +190,5 @@
 </div>
 
 @endsection
-
 
 @include('layout.script')

@@ -72,7 +72,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Orden de</th>
+                                    <th>Orden a nombre de</th>
                                     <th>Cantidad</th>
                                     <th>Detalle</th>
                                     <th>Total</th>

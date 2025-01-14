@@ -6,7 +6,7 @@
 					</div>
 					<div class="main-header-center">
 						<div class="responsive-logo">
-							<a style="width: 40%" href="{{url('/')}}"><img src="{{URL::asset('assets/img/brand/logo-light.png')}}" class="mobile-logo" alt="logo"></a>
+							<a href="{{url('/')}}"><img src="{{URL::asset('assets/img/brand/logo-light.png')}}" class="mobile-logo" alt="logo"></a>
 							<a href="{{url('/')}}"><img src="{{URL::asset('assets/img/brand/logo-light.png')}}" class="mobile-logo-dark" alt="logo"></a>
 						</div>
 					</div>
@@ -53,42 +53,7 @@
 						</div>
 						
 							
-						@if (!empty($menu['notificacion']))
-
-						<div class="dropdown main-header-notification">
-							<a class="nav-link icon" href="">
-								<i class="fe fe-bell header-icons"></i>
-								@if ($menu['cant_not'] > 0)
-									<span class="badge badge-danger nav-link-badge">{{$menu['cant_not']}}</span>
-								@endif
-							</a>
-							<div class="dropdown-menu">
-								<div class="header-navheading">
-									<p class="main-notification-text">Tienes {{$menu['cant_not']}} notificaciones sin leer<span class="badge badge-pill badge-primary ml-3">Ver Todas</span></p>
-								</div>
-								<div class="main-notification-list">
-									@foreach ($menu['notificacion'] as $item)
-										<div class="media">
-											<div class="main-img-user"><img alt="avatar" src="{{URL::asset('assets/img/users/2.jpg')}}"></div>
-											<div class="media-body">
-												<a href="/{{$item->ruta}}/{{$item->id_t}}/{{$item->id}}">
-												<p><strong>{{$item->tipo_tramite}}</strong></p>
-												<p>{{Str::limit($item->observaciones, 45, "...")}}</p>
-												<span>{{\Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</span>
-											</a>
-											</div>
-										</div>
-
-									@endforeach
-									
-								</div>
-								<div class="dropdown-footer">
-									<a href="{{url('/notificaciones')}}">Ver Todas las notificaciones</a>
-								</div>
-							</div>
-						</div>
-													
-						@endif
+						
 						<div class="dropdown main-profile-menu">
 							<a class="d-flex" href="">
 								<span class="main-img-user" ><img alt="avatar" src="{{URL::asset('assets/img/users/1.jpg')}}"></span>

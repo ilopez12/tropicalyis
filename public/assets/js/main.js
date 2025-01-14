@@ -36,12 +36,6 @@ function agregaprot(){
         '<td id="p['+id2+']"><input type="text" class="form-control" name="proteina['+id2+']" id="proteina['+id2+']"></td>'+
         '<td id="c['+id2+']"><input type="text" class="form-control" name="costo['+id2+']" id="costo['+id2+']"></td>'+
         '<td id="a['+id2+']"><input type="text" class="form-control" name="adicionalP['+id2+']" id="adicionalP['+id2+']"></td>'+
-        // '<td id="l['+id2+']">'+
-        // '    <select class="form-control" name="lugar['+id2+']" id="lugar['+id2+']">'+
-        // '        <option value="1">Rest. Nuevo</option>'+
-        // '        <option value="1">Rest. Nuevo2</option>'+
-        // '    </select>'+
-        // '</td>'+
         '<td id="cc['+id2+']"><input type="number" class="form-control" name="cantacomp['+id2+']" id="cantacomp['+id2+']" value="3" aria-describedby="basic-addon2"></td>'+
         '<td id="t['+id2+']">'+
         '    <select class="form-control" name="tipo['+id2+']" id="tipo['+id2+']">'+
@@ -53,25 +47,25 @@ function agregaprot(){
         '    </select>'+
         '<input type="hidden" value="SI" name="incluir['+id2+']"  id="incluir['+id2+']">'+
         '</td>'+
+        '<td id="cl['+id2+']"><input type="number" class="form-control" name="cantidad['+id2+']" id="cantidad['+id2+']" value="0" aria-describedby="basic-addon2"></td>'+
         '<td id="d['+id2+']"><a onclick="deleteprot('+id2+')" class="btn btn-success" style="color: white"><i class="fe fe-x-circle"></i></a></td>'
         '</tr>';
-
-
     document.getElementById('items').insertRow(-1).innerHTML = html;
-
-
     document.getElementById('numero').value = id2;
 }
 
 function deleteprot(id2){
-        document.getElementById('p['+id2+']').setAttribute("style", "display:none")
-        document.getElementById('c['+id2+']').setAttribute("style", "display:none")
-        document.getElementById('a['+id2+']').setAttribute("style", "display:none")
-        // document.getElementById('l['+id2+']').setAttribute("style", "display:none")
-        document.getElementById('cc['+id2+']').setAttribute("style", "display:none")
-        document.getElementById('t['+id2+']').setAttribute("style", "display:none")
-        document.getElementById('d['+id2+']').setAttribute("style", "display:none")
-        document.getElementById('incluir['+id2+']').value = 'NO'
+    console.log('delete', id2)
+        document.getElementById('proteina['+id2+']').value = null;
+        document.getElementById('incluir['+id2+']').value = 'NO';
+        document.getElementById('cl['+id2+']').setAttribute("style", "display:none");
+        document.getElementById('btn['+id2+']').setAttribute("style", "display:none");
+        document.getElementById('p['+id2+']').setAttribute("style", "display:none");
+        document.getElementById('c['+id2+']').setAttribute("style", "display:none");
+        document.getElementById('a['+id2+']').setAttribute("style", "display:none");
+        document.getElementById('cc['+id2+']').setAttribute("style", "display:none");
+        document.getElementById('t['+id2+']').setAttribute("style", "display:none");
+        document.getElementById('d['+id2+']').setAttribute("style", "display:none")       ;
 }
 
 function deleteacomp(id2){
@@ -97,6 +91,39 @@ function agregaacomp(){
     console.log('TTT'+id);
 }
 
+function validafecha(info){
+    var desde = document.getElementById('desde').value ;
+    var hasta = document.getElementById('hasta').value ;
+    var dia = document.getElementById('dia').value ;
+
+    console.log(desde, hasta, dia,info)
+    if(info == 'desde'){
+        document.getElementById('hasta').removeAttribute('readonly')
+    }
+    if(info == 'hasta'){
+        if(hasta < desde){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'la fecha para mostrar hasta no puede ser menor a la fecha para mostrar desde',
+              })
+              document.getElementById('hasta').value = "";
+
+        }else{
+            document.getElementById('dia').removeAttribute('readonly')
+        }
+       
+    }else if(info == 'dia'){
+        if(dia < desde || dia < hasta){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'la fecha de entrega de pedido no puede ser menor a la fecha de muestra del menu',
+              })
+              document.getElementById('dia').value = "";
+        }
+    }
+}
 
 function agregaacomp_2(){
     var id=  document.getElementById('numeroA').value;
@@ -320,6 +347,20 @@ function actualiza_costo(json_d, json_2, json_3){
 
 }
 
+function validacantidad(){
+    console.log('valida',document.getElementById('pedido'))
+    //$.ajax({
+    //    url: '/menu/getcantidad',
+    //    type: 'post',
+    //    data: formData,
+    //    contentType: false,
+    //    processData: false,
+    //    success: function(response) {
+//
+    //    }
+//
+    //});
+}
 function cerrar(id){
     $('#'+id).modal('hide');
 }

@@ -49,10 +49,9 @@
                     <table class="table" id="example2">
                         <thead>
                             <tr>
-                                <th class="wd-20p">#</th>
+                                <th class="wd-5p">#</th>
                                 <th class="wd-20p">Orden de</th>
                                 <th class="wd-20p">Cantidad</th>
-                                <th class="wd-15p">Fecha</th>
                                 <th class="wd-15p">Precio</th>
                                 <th class="wd-15p">Adicional</th>
                                 <th class="wd-15p">Total</th>
@@ -69,11 +68,11 @@
                                 <td>{{$key+1}}</td>
                                 <td>{{$item->solicitante}}</td>
                                 <td>{{$item->cantidad}}</td>
-                                <td>{{\Carbon\Carbon::parse($item->fecha)->format('d/m/y') }}</td>
+                                
                                 <td>$ {{number_format($item->total_prot, 2 ) }}</td>
                                 <td>$ {{number_format($adicional, 2 ) }}</td>
                                 <td>$ {{number_format($total, 2 ) }}</td>
-                                <td>{{$item->enviada}}</td>
+                                <td>{{$item->enviado}}</td>
                             </tr>
                             @endforeach
                             

@@ -18,38 +18,54 @@
       <div class="col-8">
         <div class="row">
           <div class="col-12 mt-5" style="text-align: center;">
-              <h3>Listado del Menú del dia {{\Carbon\Carbon::parse(date(now()))->locale('es')->translatedFormat('j \d\e F \d\e Y') }}</h3>
+              <h3>Listado de Menú</h3>
           </div>
           <div class="row mt-5">
             <div aria-multiselectable="true" class="accordion" id="accordion" role="tablist">
             
               @foreach ($restaurante as $key => $val)
                 <div class="card">
-                  <div class="card-header" id="headingOne" role="tab">
-                    @php
-                        // dd(\Carbon\Carbon::parse($menu[0]->dia)->format('Y-m-d') == \Carbon\Carbon::parse(date(now()))->format('Y-m-d'));
-                    @endphp
-                    @if (\Carbon\Carbon::parse($menu[0]->dia)->format('Y-m-d') == \Carbon\Carbon::parse(date(now()))->format('Y-m-d'))
-                    <a aria-controls="collapseOne" aria-expanded="true" data-toggle="collapse" href="#collapseOne{{$val->id}}"> Menú Restaurante {{$val->nombre}} dia</a>
+                 
+                    
+                    @if (\Carbon\Carbon::parse($val->dia)->format('Y-m-d') == \Carbon\Carbon::parse(date(now()))->format('Y-m-d'))
+                      <div class="card-header" id="headingOne" role="tab" >
+                        <a style="background-color: #24243e !important;color: #e8e1f9 !important;" aria-controls="collapseOne" aria-expanded="true" data-toggle="collapse" href="#collapseOne{{$key}}"> Menú Restaurante {{$val->nombre}} **PARA ENTREGA HOY**</a>
+                      </div>
                     @else
-                    <a aria-controls="collapseOne" aria-expanded="true" data-toggle="collapse" href="#collapseOne{{$val->id}}"> Menú Restaurante {{$val->nombre}}</a>
+                      <div class="card-header" id="headingOne" role="tab">
+                        <a aria-controls="collapseOne" aria-expanded="true" data-toggle="collapse" href="#collapseOne{{$key}}"> **Para entrega el día {{\Carbon\Carbon::parse($val->dia)->locale('es')->translatedFormat('j \d\e F \d\e Y')}}** Menú Restaurante {{$val->nombre}}</a>
+                      </div>
                     @endif
                     
-                  </div>
+                  
                  
-                  <div aria-labelledby="headingOne" class="collapse" data-parent="#accordion" id="collapseOne{{$val->id}}" role="tabpanel">
+                  <div aria-labelledby="headingOne" class="collapse" data-parent="#accordion" id="collapseOne{{$key}}" role="tabpanel">
                       <div class="row  m-1">
-                      <div class="col-lg-6">
-                        <h6>PRINCIPAL</h6>
+                      <div class="col-lg-6 ">
+                        <h6 class="mt-2">PRINCIPAL</h6>
                         <table>
                           <tbody>
                             @foreach ($menu as $key => $item)
+                           
                                 @if ($item->tipo == 'Proteina' && $item->restaurante == $val->id)
-                                <tr>
-                                  <td><input onclick="actualiza_costo({{json_encode($item)}}, {{json_encode($acomp)}}, {{json_encode($menu)}})" type="radio" name="proteina" value="{{$item->id}}" id="proteina[{{$key}}]"> <input type="hidden" name="fecha[{{$key}}]" id="fecha[{{$key}}]" value="{{$item->fecha}}"></td>
-                                  <td  style="width: 60%">{{$item->nombre}}</td>
-                                  <td>${{number_format($item->costo, 2)}}</td>
-                                </tr>   
+                                  @if ($item->cantidad > 0)
+                                    @if ($item->consumido < $item->cantidad)
+                                      <tr>
+                                        <td><input onclick="actualiza_costo({{json_encode($item)}}, {{json_encode($acomp)}}, {{json_encode($menu)}})" type="radio" name="proteina" value="{{$item->id}}" id="proteina[{{$key}}]"> <input type="hidden" name="fecha[{{$key}}]" id="fecha[{{$key}}]" value="{{$item->fecha}}"></td>
+                                        <td  style="width: 60%">{{$item->nombre}}</td>
+                                        <td>${{number_format($item->costo, 2)}} <input type="hidden" name="dia" id="dia" value="{{$item->dia}}"></td>
+                                      </tr>  
+                                    @else
+                                      <p style="color: red"><strong>MENÚ AGOTADO</strong></p>
+                                    @endif
+                                  @else
+                                  <tr>
+                                    <td><input onclick="actualiza_costo({{json_encode($item)}}, {{json_encode($acomp)}}, {{json_encode($menu)}})" type="radio" name="proteina" value="{{$item->id}}" id="proteina[{{$key}}]"> <input type="hidden" name="fecha[{{$key}}]" id="fecha[{{$key}}]" value="{{$item->fecha}}"></td>
+                                    <td  style="width: 60%">{{$item->nombre}}</td>
+                                    <td>${{number_format($item->costo, 2)}}<input type="hidden" name="dia" id="dia" value="{{$item->dia}}"></td>
+                                  </tr> 
+                                  @endif
+
                                 @endif
                             @endforeach
                           </tbody>
@@ -156,7 +172,7 @@
                     <h5 for="">Cantidad</h5>
                    
                     <div class="col-lg-12">
-                      <input  class="form-control" value="1" type="number" name="cantidad_r" id="cantidad_r" >
+                      <input  class="form-control" value="1" type="number" name="cantidad_r" id="cantidad_r" onchange="validacantidad()" >
                     </div>
                     
                   </div>

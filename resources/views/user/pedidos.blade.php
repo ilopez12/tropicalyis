@@ -12,53 +12,57 @@
 	<!-- Page Header -->
 	<div class="page-header ml-5 mr-5">
 		<div>
-			<h2 class="main-content-title tx-24 mt-5">Pedidos hasta el día {{\Carbon\Carbon::parse(date(now()))->locale('es')->translatedFormat('j \d\e F \d\e Y') }}</h2>
+			<h2 class="main-content-title tx-24 mt-5">Pedidos {{$fecha}}</h2>
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="#">Pedidos</a></li>
 				<li class="breadcrumb-item active" aria-current="page">Todos los Pedidos</li>
 			</ol>
 		</div>
 	</div>
-	<div class="card mb-2">
-		<div class="card-body">
-				<div class="row">
-					<div class="col-12">
-						<h3>Filtro</h3>
+	<form action="filtro" method="post">
+		@csrf
+		<div class="card mb-2">
+			<div class="card-body">
+					<div class="row">
+						<div class="col-12">
+							<h3>Filtro</h3>
+						</div>
+					<div class="col-4">
+						<label for="">Buscar Desde</label>
+						<input type="date" name="desde" id="desde" class="form-control">
 					</div>
-				<div class="col-4">
-					<label for="">Buscar Desde</label>
-					<input type="date" name="desde" id="desde" class="form-control">
+					<div class="col-4">				
+						<label for="">Hasta</label>
+						<input type="date" name="hasta" id="hasta" class="form-control">
+					</div>
+					<div class="col-4">
+						<label class="form-label"> <strong>Tipo</strong></label>
+						<select class="form-control select-lg select2" name="tipo" id="tipo">
+							<option value="0">Todos</option>
+							<option value="1">Sin Pago</option>
+							<option value="2">Pagados</option>
+						</select>
+					</div>
+					<div class="col-4">
+						<label class="form-label"> <strong>Favoritos</strong></label>
+						<select class="form-control select-lg select2" name="fav" id="fav">
+							<option value="0">Todos</option>
+							{{-- <option value="0">Todos</option>
+							<option value="1">Sin Pago</option>
+							<option value="2">Pagados</option> --}}
+						</select>
+					</div>
+					<div class="col-4 mt-4">
+						
+						<button type="submit" class="btn ripple btn-primary btn-lg btn-block"><i class="fe fe-search"></i> Filtrar</button>
+					</div>
+					{{-- Buscar Por Favorito
+					Buscar por Morosidad
+					Buscar por Fecha  --}}
 				</div>
-				<div class="col-4">				
-					<label for="">Hasta</label>
-					<input type="date" name="hasta" id="hasta" class="form-control">
-				</div>
-				<div class="col-4">
-					<label class="form-label"> <strong>Tipo</strong></label>
-                    <select class="form-control select-lg select2" name="tipo" id="tipo">
-                        <option value="0">Todos</option>
-                        <option value="1">Sin Pago</option>
-                        <option value="2">Pagados</option>
-                    </select>
-				</div>
-				<div class="col-4">
-					<label class="form-label"> <strong>Favoritos</strong></label>
-                    <select class="form-control select-lg select2" name="fav" id="fav">
-						<option value="0">Todos</option>
-                        {{-- <option value="0">Todos</option>
-                        <option value="1">Sin Pago</option>
-                        <option value="2">Pagados</option> --}}
-                    </select>
-				</div>
-				<div class="col-4 mt-4">
-					<button type="button" class="btn ripple btn-primary btn-lg btn-block"><i class="fe fe-search"></i> Filtrar</button>
-				</div>
-				{{-- Buscar Por Favorito
-				Buscar por Morosidad
-				Buscar por Fecha  --}}
 			</div>
 		</div>
-	</div>
+	</form>
 	
 	<div class="row row-sm  ">
 		<div class="col-lg-12">

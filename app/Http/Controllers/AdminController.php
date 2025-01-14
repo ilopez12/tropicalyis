@@ -25,7 +25,9 @@ class AdminController extends Controller
             //INSERTANDO LAS PROTEINAS
             $arreglo = [];
             $restaurante = $datos->lugar;
+            //dd($datos);
             if($datos->proteina[0] != null){
+               
                 foreach($datos->proteina as $key => $item){
                     $temp = [
                         'nombre' => $item,
@@ -38,7 +40,8 @@ class AdminController extends Controller
                         'cantAcomp' => $datos->cantacomp[$key],
                         'tipo_comida' =>  $datos->tipo[$key],
                         'costo' => floatval($datos->costo[$key]),
-                        'adicional' => floatval($datos->adicionalP[$key]),
+                        'adicional' => floatval($datos->adicionalP[$key]),                        
+                        'cantidad' => floatval($datos->cantidad[$key]),
                     ];
                    $menu=  Menu::create($temp);
                    
@@ -47,6 +50,7 @@ class AdminController extends Controller
             }
             if($datos->acomp[0] != null){
                 foreach($datos->acomp as $key => $item){
+                    if($item[$key] != null){
                         $temp = [
                             'nombre' => $item,
                             'tipo' => 'Acomp',
@@ -59,9 +63,11 @@ class AdminController extends Controller
                             'hasta' => $datos->hasta,
                             'dia' => $datos->dia,
                             'adicional' => floatval($datos->adicionalA[$key]),
+                            'cantidad' => null
                         ];
                         Menu::create($temp);
                         array_push($arreglo, $temp);
+                    }
                 }
             }
             return redirect()->back()->with('guardada', 'Orden Creada');

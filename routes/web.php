@@ -174,7 +174,10 @@ Route::group(['prefix' => 'menu'], function(){
     route::get('/', [MenuController::class, 'index']);
     route::get('/m2', [MenuController::class, 'index2']);
     route::get('carrito', [MenuController::class, 'carrito']);
-    route::get('all', [MenuController::class, 'all']);
+    route::get('all', [MenuController::class, 'all']);    
+    route::post('filtro', [MenuController::class, 'filtro']);
+    route::post('getcantidad', [MenuController::class, 'getcantidad']);
+    
     route::get('pedidosday', [MenuController::class, 'ordenesday']);
     route::post('/save', [MenuController::class, 'save']);
 
@@ -193,10 +196,8 @@ Route::group(['prefix' => 'menu'], function(){
 });
 
 Route::group(['prefix' => 'admin'], function(){
-    route::get('/', function () {
-        return view('admin.menu');
-    });
-    
+    route::get('/', [MenuController::class, 'administrador']);    
+    route::get('/new', [MenuController::class, 'administrador']);
     route::post('/recurrente', [AdminController::class, 'recurrente']);
     route::post('/save', [AdminController::class, 'save']);
     route::post('/getmenu', [AdminController::class, 'getmenu']);
@@ -236,11 +237,11 @@ Route::get('/', function () {
         }else{
             $date = Carbon::now();
             $date->toDateString();
-            $deldia = enc_pedido::getbyday($date->toDateString());
+            $deldia = enc_pedido::getpedidosday($date->toDateString());
             $enviados = 0;
             $porenviar = 0;
             foreach($deldia as $val){
-                if($val->enviado == null){
+                if($val->enviado == null || $val->enviado == 'NO' || $val->enviado == ''){
                     $porenviar = $porenviar +1 ;
                 }else{
                     $enviados = $enviados +1 ;
