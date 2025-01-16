@@ -11,7 +11,11 @@
 <!-- Page Header -->
 <div class="page-header">
 	<div>
+        @if ($pedidos > 0 )
 		<h2 class="main-content-title tx-24 mg-b-5">Pedidos del Dia {{\Carbon\Carbon::parse($ordenes[0]->fecha)->locale('es')->translatedFormat('j \d\e F \d\e Y') }}</h2>
+        @else
+        <h2 class="main-content-title tx-24 mg-b-5">Pedidos del Dia </h2>
+        @endif
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="/">Menu Pedidos</a></li>
 			<li class="breadcrumb-item active" aria-current="page">Pedidos</li>
@@ -34,7 +38,13 @@
         <div class="card custom-card">
             <div class="card-body">
                 <div>
+                    @if ($pedidos > 0)
+                        
                     <h6 class="main-content-label mb-1">Pedidos del día {{\Carbon\Carbon::parse($ordenes[0]->fecha)->locale('es')->translatedFormat('j \d\e F \d\e Y') }}</h6>
+                    @else
+                    <h6 class="main-content-label mb-1">Pedidos del día</h6>
+
+                    @endif
                 <div class="row row-sm">	
                     <div class="col-sm-6">
                         <p class="text-muted card-sub-title">Total de Pedidos: {{$pedidos}}</p>

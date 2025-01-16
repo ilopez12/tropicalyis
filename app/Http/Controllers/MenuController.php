@@ -66,12 +66,17 @@ class MenuController extends Controller
         $date->toDateString();
 
         $menu = enc_pedido::getpedidosday($date->toDateString());
-        // dd($menu);
         $total_pedidos = count($menu);
         $total = 0;
-        foreach($menu as $item){
-            $total = $item->total + $total;
+
+        if($total_pedidos > 0){
+            foreach($menu as $item){
+                $total = $item->total + $total;
+            }
+        }else{
+            $total = 0;
         }
+        //dd($menu,$total_pedidos);
         // dd($menu);
         return view('user.ordenday', ['ordenes' => $menu, 'total' => $total, 'pedidos' =>$total_pedidos]);
 
