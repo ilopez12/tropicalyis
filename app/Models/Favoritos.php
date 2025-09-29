@@ -13,6 +13,8 @@ class Favoritos extends Model
 
     public static function getbyuser($id){
         $query = Favoritos::where('usuario', $id)
+                 ->leftJoin('departments', 'departments.id', '=', 'favoritos.department')
+                 ->select('favoritos.*', 'departments.name as department_name')
                  ->get();
 
         return $query;
@@ -23,7 +25,8 @@ class Favoritos extends Model
 
         $table->nombre = $data->nombre;
         $table->usuario = $data->id;
-        $table->descript = $data->descript;
+        $table->descript = $data->descript;        
+        $table->department = $data->department;
         $table->estado = 'ACTIVO';
         $table->created_at = date(now());
         $table->created_user = $user;

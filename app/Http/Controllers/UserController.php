@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Contribuyente;
 use App\Models\departamentos;
+use App\Models\departments;
 use App\Models\Favoritos;
 use Illuminate\Http\Request;
 use App\Models\Menu;
@@ -22,23 +23,24 @@ class UserController extends Controller
 {
 	
 	public function all(){
-		$istado = User::getall();
+		$usuarios = User::getall();		
+		$departments = departments::getAllDepartments();
 
-		return view('admin.usuarios', ['listado' =>$istado]);
+
+		return view('admin.usuarios', ['listado' =>$usuarios, 'departments'=> $departments]);
 	}
 
-	public function nuevouser(){
+	public function addUser(){
+		$departments = departments::getAllDepartments();
 
-		return view('admin.nuevousuario');
+		return view('admin.nuevousuario', ['departments' => $departments]);
 	}
 
 	public function resetpass(Request $data){
 		try{
-			
 			$id = $data->id;
 			$contrasena = $data->pass.''.$data->ultimos;
 			$pass = Hash::make($contrasena);
-			// dd($contrasena);
 			$user = Auth::user()->id;
 
 			User::resetpass($id, $pass, $user);
@@ -47,8 +49,6 @@ class UserController extends Controller
 			dd($ex);
 			return 1 ;
 		}
-		
-
 	}
 
 	public function bloqueo(Request $data){
@@ -66,28 +66,35 @@ class UserController extends Controller
 			dd($ex);
 			return 1 ;
 		}
-		
-
 	}
 
-	
-	public function updateuser(Request $data){
+	public function updateUser(Request $data){
 		try{
-			
+
+			User::updateUser($data);
+			return 0 ;
+		}catch(Exception $ex){
+			dd($ex);
+			return 1 ;
+		}
+	}
+
+
+	
+	public function changestatus(Request $data){
+		try{
 			if($data->actual == 'INACTIVO'){
 				$estatus = 'ACTIVO';
 			}else{
 				$estatus = 'INACTIVO';
 			}
-			// dd($data->id, $estatus, $data->actual);
+
 			User::changestatus($data->id, $estatus);
 			return 0 ;
 		}catch(Exception $ex){
 			dd($ex);
 			return 1 ;
 		}
-		
-
 	}
 
 	public function upconection(){

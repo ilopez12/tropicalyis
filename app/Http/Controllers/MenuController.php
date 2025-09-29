@@ -267,7 +267,6 @@ class MenuController extends Controller
 
     }
 
-
     public function generarenvio(){
         $date = Carbon::now();
         $date->toDateString();
@@ -339,6 +338,7 @@ class MenuController extends Controller
         return Response::make($csvContent, 200, $headers);
         // return redirect()->back()->with('succes', 'orden');
     }
+
     public function getpedidos(Request $datos){
         try{
             if($datos->usuario != 0){
@@ -484,6 +484,7 @@ class MenuController extends Controller
             dd($ex);
         }
     }
+    
     public function ordenar(){
     
         try{
@@ -677,6 +678,7 @@ class MenuController extends Controller
        $restaurante =  general::getrestaurante();
         return view('admin.menu',['listado' => $restaurante ] );
     }
+    
     public function vermenu(){
 
         $restaurante =  general::getrestaurante();

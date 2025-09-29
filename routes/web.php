@@ -2,17 +2,9 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\contribuyentecontroller;
 use App\Http\Controllers\FavoritosController;
-use App\Http\Controllers\fincacontroller;
-use App\Http\Controllers\generalescontroller;
-use App\Http\Controllers\Gestion_CobrosController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\noauth;
-use App\Http\Controllers\ProyectoController;
-use App\Http\Controllers\Reciboscontroller;
-use App\Http\Controllers\RolesController;
-use App\Http\Controllers\Tramitescontroller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Models\enc_pedido;
@@ -31,31 +23,31 @@ use App\Models\User;
 | contains the "web" middleware group. Now create something great!
 |
 */
-route::get('/signup', [UserController::class, 'signup']);
-route::post('valida_celular', [noauth::class, 'validacelular']); 
-route::post('validaCodigo', [noauth::class, 'validaCodigo']); 
-route::post('createcontribuyente', [noauth::class, 'create']); 
-route::post('generacodigo', [noauth::class, 'generacodigo']); 
-route::post('validaemailC', [noauth::class, 'validamailC']); 
-route::post('resets', [noauth::class, 'resets']); 
-route::post('resetownpass',[noauth::class, 'resetpassown']);
-route::get('newUserExterno', function () {
-    return view('email.newUserExterno');
-});
-route::get('bienvenida', function () {
-    return view('email.Bienvenida');
-});
-route::get('resetP', function () {
-    return view('auth.passwords.reset');
-});
+// route::get('/signup', [UserController::class, 'signup']);
+// route::post('valida_celular', [noauth::class, 'validacelular']); 
+// route::post('validaCodigo', [noauth::class, 'validaCodigo']); 
+// route::post('createcontribuyente', [noauth::class, 'create']); 
+// route::post('generacodigo', [noauth::class, 'generacodigo']); 
+// route::post('validaemailC', [noauth::class, 'validamailC']); 
+// route::post('resets', [noauth::class, 'resets']); 
+// route::post('resetownpass',[noauth::class, 'resetpassown']);
+// route::get('newUserExterno', function () {
+//     return view('email.newUserExterno');
+// });
+// route::get('bienvenida', function () {
+//     return view('email.Bienvenida');
+// });
+// route::get('resetP', function () {
+//     return view('auth.passwords.reset');
+// });
 
 // Auth::routes();
-route::get('registrar', function () {
-    return view('auth.registrocontribuyente');
-});
-route::get('verify', function () {
-    return view('auth.verify');
-});
+// route::get('registrar', function () {
+// return view('auth.registrocontribuyente');
+// });
+// route::get('verify', function () {
+// return view('auth.verify');
+// });
 
 route::get('/index', [UserController::class, 'index']);
 route::get('/index', [UserController::class, 'index']);
@@ -162,12 +154,48 @@ route::get('/width', [UserController::class, 'width']);
 route::get('/error404', [UserController::class, 'error404']);
 route::get('/error500', [UserController::class, 'error500']);
 
+// routes of proyect
+
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/crearusuario', [UserController::class, 'create'])->name('create');
 
 Auth::routes();
 
 Route::get('/log', [App\Http\Controllers\UserController::class, 'upconection'])->name('upconection');
+
+Route::get('/', [App\Http\Controllers\AdminController::class, 'getAdminDashboard']);
+
+Route::group(['prefix' => 'admin'], function(){
+    route::get('/', [MenuController::class, 'administrador']);    
+    route::get('/new', [MenuController::class, 'administrador']);
+    route::post('/recurrente', [AdminController::class, 'recurrente']);
+    route::post('/save', [AdminController::class, 'save']);
+    route::post('/getmenu', [AdminController::class, 'getmenu']);
+    route::get('generarenvio', [MenuController::class, 'generarenvio']);
+    route::get('user', [UserController::class, 'all']);
+    route::get('addUser', [UserController::class, 'addUser']);   
+    route::get('departments', [AdminController::class, 'getDepartments']);
+    route::get('addDepartment', [AdminController::class, 'addDepartment']);
+
+    route::post('validacelular', [UserController::class, 'validacelular']);
+    route::post('createuser', [UserController::class, 'create']);
+    route::post('createDepartment', [AdminController::class, 'create']);
+
+    
+    route::post('updateUser', [UserController::class, 'updateUser']);
+    route::post('resetpass', [UserController::class, 'resetpass']);
+    route::post('bloqueo', [UserController::class, 'bloqueo']);
+    route::post('changestatus', [UserController::class, 'changestatus']);
+    route::post('favoritos', [FavoritosController::class, 'favoritos']);
+    route::post('addfavoritos', [FavoritosController::class, 'addfavoritos']);
+    route::post('actualizaFav', [FavoritosController::class, 'actualizaFav']);
+    
+    
+    route::get('all', function () {
+        return view('admin.rango');
+    });
+
+});
 
 Route::group(['prefix' => 'menu'], function(){
    
@@ -195,66 +223,10 @@ Route::group(['prefix' => 'menu'], function(){
     });
 });
 
-Route::group(['prefix' => 'admin'], function(){
-    route::get('/', [MenuController::class, 'administrador']);    
-    route::get('/new', [MenuController::class, 'administrador']);
-    route::post('/recurrente', [AdminController::class, 'recurrente']);
-    route::post('/save', [AdminController::class, 'save']);
-    route::post('/getmenu', [AdminController::class, 'getmenu']);
-    route::get('generarenvio', [MenuController::class, 'generarenvio']);
-    route::get('user', [UserController::class, 'all']);
-    route::get('nuevouser', [UserController::class, 'nuevouser']);
-    route::post('validacelular', [UserController::class, 'validacelular']);
-    route::post('createuser', [UserController::class, 'create']);
-    route::post('resetpass', [UserController::class, 'resetpass']);
-    route::post('bloqueo', [UserController::class, 'bloqueo']);
-    route::post('updateuser', [UserController::class, 'updateuser']);
-    route::post('favoritos', [FavoritosController::class, 'favoritos']);
-    route::post('addfavoritos', [FavoritosController::class, 'addfavoritos']);
-    route::post('actualizaFav', [FavoritosController::class, 'actualizaFav']);
-    
-    
-    route::get('all', function () {
-        return view('admin.rango');
-    });
-
-});
-
-
 Route::get('/logout', [App\Http\Controllers\LogoutController::class, 'logout'])->name('logout');
 Route::get('/Inactive', [App\Http\Controllers\LogoutController::class, 'Inactive'])->name('Inactive');
 
-Route::get('/', function () {
-    if(Auth::user()){
-        if(Auth::user()->rol == 1){
-            $date = Carbon::now();
-            $date->toDateString();
-        
-            $menu = Menu::getmenu($date->toDateString());
-            $acomp = Menu::getacomp($date->toDateString());
-            $restaurante = General::getrestaurante();
-            return view('user.menu', ['menu' => $menu, 'acomp' => $acomp, 'restaurante' =>$restaurante]);
-        }else{
-            $date = Carbon::now();
-            $date->toDateString();
-            $deldia = enc_pedido::getpedidosday($date->toDateString());
-            $enviados = 0;
-            $porenviar = 0;
-            foreach($deldia as $val){
-                if($val->enviado == null || $val->enviado == 'NO' || $val->enviado == ''){
-                    $porenviar = $porenviar +1 ;
-                }else{
-                    $enviados = $enviados +1 ;
-                }
-            }
-            return view('home', ['deldia' =>$deldia, 'enviados' => $enviados, 'porenviar' => $porenviar]);
-        }
-    
-    }else{
-        return redirect('login');
-    }
-    
-});
+
 
 
 

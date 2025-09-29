@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\departments;
+use App\Models\enc_pedido;
 use App\Models\General;
 use App\Models\Menu;
 use Carbon\Carbon;
@@ -15,6 +17,39 @@ class AdminController extends Controller
     {
         $this->middleware('auth');
     }
+
+    public function getAdminDashboard(){
+        if(Auth::user()){
+            if(Auth::user()->rol == 1){
+                $date = Carbon::now();
+                $date->toDateString();
+            
+                $menu = Menu::getmenu($date->toDateString());
+                $acomp = Menu::getacomp($date->toDateString());
+                $restaurante = General::getrestaurante();
+                return view('user.menu', ['menu' => $menu, 'acomp' => $acomp, 'restaurante' =>$restaurante]);
+            }else{
+                $date = Carbon::now();
+                $date->toDateString();
+                $deldia = enc_pedido::getpedidosday($date->toDateString());
+                $enviados = 0;
+                $porenviar = 0;
+                foreach($deldia as $val){
+                    if($val->enviado == null || $val->enviado == 'NO' || $val->enviado == ''){
+                        $porenviar = $porenviar +1 ;
+                    }else{
+                        $enviados = $enviados +1 ;
+                    }
+                }
+                return view('home', ['deldia' =>$deldia, 'enviados' => $enviados, 'porenviar' => $porenviar]);
+            }
+        
+        }else{
+            return redirect('login');
+        }
+        
+    }
+
     public function recurrente(Request $datos){
         // dd($datos);
          General::saverecurrente(Auth::user()->id ,$datos->recurrente);
@@ -90,5 +125,24 @@ class AdminController extends Controller
         $menu =  Menu::getbyRango($desde->toDateString(), $hasta->toDateString());
 
         return $menu;
+    }
+
+    public function getDepartments(){
+        $departments = departments::getAllDepartments();
+
+		return view('admin.department', ['departments' =>$departments]);
+    }
+
+    public function addDepartment(){
+        return view('admin.newDepartment',);
+    }
+
+    public function create(Request $datos){
+        try{
+            departments::create($datos);
+            return redirect('admin/departments');
+        }catch(Exception $ex){
+            return redirect('admin/departments');
+        }
     }
 }

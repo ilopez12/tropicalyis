@@ -75,6 +75,7 @@ class User extends Authenticatable
         return $user; 
        
     }
+
     public static function changestatus($id, $estado){
         $user = User::find($id);
         $user->estatus = $estado;
@@ -82,8 +83,21 @@ class User extends Authenticatable
         $user->save();
 
         return $user; 
-       
     }
+
+    public static function updateUser($data){
+        // dd( $data);
+        $user = User::find((int) $data->id);
+        $user->name = $data->name;
+        $user->telefono = $data->telefono;
+        $user->email = $data->telefono;
+        $user->departamento = $data->departamento;
+
+        $user->save();
+
+        return $user; 
+    }
+
     public static function create($data, $pass, $estado){
 
             $table = new User();
@@ -101,7 +115,9 @@ class User extends Authenticatable
     }
 
     public static function getall(){
-        $user = User::get();
+        $user = User::leftJoin('departments', 'departments.id', '=', 'users.departamento')
+                    ->select('users.*', 'departments.name as department_name')
+                    ->get();
 
         return $user;
     }

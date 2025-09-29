@@ -46,10 +46,9 @@
                                         <div class="col-lg form-group">
                                             <label class="form-label">Departamento:</label>
                                             <select name="depto" class="form-control select-lg select2">
-												<option value="Archivos">Archivos</option>
-												<option value="Contabilidad">Contabilidad</option>
-												<option value="Piso 2">Piso 2</option>
-												<option value="Planilla">Planilla</option>
+                                                @foreach( $departments as $key => $item)
+												<option value="{{$item->id}}">{{$item->name}}</option>
+                                                @endforeach
 											</select>
                                         </div>
                                     </div>

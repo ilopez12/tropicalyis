@@ -55,7 +55,6 @@ function agregaprot(){
 }
 
 function deleteprot(id2){
-    console.log('delete', id2)
         document.getElementById('proteina['+id2+']').value = null;
         document.getElementById('incluir['+id2+']').value = 'NO';
         document.getElementById('cl['+id2+']').setAttribute("style", "display:none");
@@ -88,7 +87,7 @@ function agregaacomp(){
 
     document.getElementById('items2').insertRow(-1).innerHTML = html;
     document.getElementById('numeroA').value = id2;
-    console.log('TTT'+id);
+   
 }
 
 function validafecha(info){
@@ -96,7 +95,6 @@ function validafecha(info){
     var hasta = document.getElementById('hasta').value ;
     var dia = document.getElementById('dia').value ;
 
-    console.log(desde, hasta, dia,info)
     if(info == 'desde'){
         document.getElementById('hasta').removeAttribute('readonly')
     }
@@ -173,7 +171,6 @@ function traepedidos(){
             confirmButtonText: 'Enterado'
           })
     }else{
-        console.log(desde+' hasta '+hasta);
         var formData  =new FormData();
             formData.append('desde', desde);
             formData.append('hasta', hasta);
@@ -190,7 +187,6 @@ function traepedidos(){
                         var table ='';
                         
                         for(var i = 0; i < resp.length; i++){
-                            console.log(resp[i].solicitante);
                             html = '<tr>'+
                                         // '<td>'+resp[i].id+'</td>'+
                                         '<td>'+resp[i].solicitante+'</td>'+
@@ -234,7 +230,6 @@ function traemenu(){
                     processData: false,
                     success: function(response) {
                         resp =  response;
-                        console.log(resp);
                         var table ='';
                         var proteina = [];
                         moment.locale('es');
@@ -337,33 +332,20 @@ function actualiza_costo(json_d, json_2, json_3){
     document.getElementById('tbodyacom').innerHTML = html;
     document.getElementById('tbodyadicional').innerHTML = html2;
     $('#modal-acomp').modal('show');
-    // $('#modal').modal('show');
-        console.log(json_3);
+
         cant_acomp = json_d.cantAcomp;
         cant_actual = 0;
-        console.log(cant_acomp);
-        
-
 
 }
 
 function validacantidad(){
     console.log('valida',document.getElementById('pedido'))
-    //$.ajax({
-    //    url: '/menu/getcantidad',
-    //    type: 'post',
-    //    data: formData,
-    //    contentType: false,
-    //    processData: false,
-    //    success: function(response) {
-//
-    //    }
-//
-    //});
 }
+
 function cerrar(id){
     $('#'+id).modal('hide');
 }
+
 function cambiaPass(id, cel, user){
 
     const numero =  cel.toString()
@@ -374,6 +356,76 @@ function cambiaPass(id, cel, user){
     document.getElementById("id").value = user
     
     $('#'+id).modal('show');
+}
+
+function updateUser(id, infoUser, departments){
+    console.log("departments",departments);
+    var td = `
+    <input type="hidden" name="idUser" id="idUser" value="${infoUser.id}">
+        <label class="form-label">Celular:</label>
+        <div class="input-group mb-3">
+            <input maxlength="6"  aria-describedby="basic-addon2" aria-label="celular" name="celular" id="celular" class="form-control" placeholder="Celular" value="${infoUser.telefono}" type="number">
+        </div>
+
+        <label class="form-label">Nombre:</label>
+        <div class="input-group mb-3">
+            <input aria-describedby="basic-addon2" aria-label="name" name="name" id="name" class="form-control" placeholder="Nombre" value="${infoUser.name}" type="text">
+        </div>
+
+        <div class="input-group mb-3">
+            <label class="form-label">Departamento:</label>
+            <select class="form-control select-lg select2"  name="departamento" id="departamento">`
+            departments.forEach(function(element) {
+                if(infoUser.departamento == element.id){
+                     td +=`<option selected value="${element.id}">${element.name}</option>`
+                }else{
+                      td +=`<option value="${element.id}">${element.name}</option>`
+                }
+            });
+    td +=`</select>
+        </div>`
+
+    document.getElementById("userInfo").innerHTML = td
+    
+    $('#'+id).modal('show');
+}
+
+function actualizaUser(){
+    const id = document.getElementById("idUser").value    
+    const celular = document.getElementById("celular").value
+    const name = document.getElementById("name").value
+    const depto = document.getElementById("departamento").value
+
+    var formData  =new FormData();
+        formData.append('_token', $("input[name='_token']").val()); 
+        formData.append('id', id); 
+        formData.append('telefono', celular); 
+        formData.append('name', name); 
+        formData.append('departamento', depto); 
+
+        $.ajax({
+            url: '/admin/updateUser',
+            type: 'post',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+
+                if(response == 1){
+                    swal("Ops!", "Ha ocurrido un error, favor vuelta a intentarlo", "error");
+                }else{
+                    swal({
+                        title: "Usuario Actualizado!",     
+                        icon: "success",
+                        button: {
+                            text: "Ok!",
+                            closeModal: false,
+                        },
+                        });
+                        location.reload();
+                }
+            }
+        });
 }
 
 function agregar(){
@@ -425,7 +477,6 @@ function agregar(){
                 
             }}); 
     }
-    // console.log(document.getElementById('pedido'));
 }
 
 function eliminarcarrito(id){
@@ -435,7 +486,7 @@ function eliminarcarrito(id){
 }
 
 function cantacomp(id){
-    console.log(id);
+
     if (document.getElementById('acomp['+id+']').checked == true){
         if (cant_actual < cant_acomp ){
             cant_actual = cant_actual +1;
@@ -530,7 +581,6 @@ function verificafecha(){
 
 function ver(){
    var orden = $('#orden_dee').val();
-   console.log(orden);
    if(orden == 1){
         $('#modal-recurrente').modal('show');
    }
@@ -565,7 +615,7 @@ function addrecurrent(){
 function muestranumero(){
 
     const numero = document.getElementById("celular").value
-    console.log(numero);
+
     if(numero.length < 8 ){
         swal("Celular incorrecto!", "Formato de celular incorrecto, Favor Validar que cuente con 8 números", "warning");
         document.getElementById("celular").focus()
@@ -584,7 +634,7 @@ function muestranumero(){
             contentType: false,
             processData: false,
             success: function(response) {
-               console.log(response);
+             
                if(response == 1){
                 swal("Celular Existente!", "Este celular ya existe en el sistema", "warning");
                 document.getElementById("celular").value = ''
@@ -592,7 +642,6 @@ function muestranumero(){
                     // AGREGAR AL PASS
 
                     const pass = numero.substring(numero.length -4)
-                    console.log(pass);
                     document.getElementById("pass").innerText = pass
                     document.getElementById("ultimos").value = pass
                }
@@ -623,7 +672,7 @@ function actualizapass(){
             contentType: false,
             processData: false,
             success: function(response) {
-                console.log(response);
+
                 if(response == 1){
                     swal("Ops!", "Ha ocurrido un error, favor vuelta a intentarlo", "error");
                 }else{
@@ -675,7 +724,7 @@ function bloqueo(id, actual){
                 contentType: false,
                 processData: false,
                 success: function(response) {
-                    console.log(response);
+                
                     if(response == 0){
                         Swal.fire({
                             title: "Actualizado!",
@@ -720,13 +769,13 @@ function actualizaestado(id, actual){
             formData.append('id', id); 
             formData.append('actual', actual); 
             $.ajax({
-                url: '/admin/updateuser',
+                url: '/admin/changestatus',
                 type: 'post',
                 data: formData,
                 contentType: false,
                 processData: false,
                 success: function(response) {
-                    console.log(response);
+                
                     if(response == 0){
                         Swal.fire({
                             title: "Actualizado!",
@@ -757,33 +806,30 @@ function addfavorito(id){
         contentType: false,
         processData: false,
         success: function(response) {
-            console.log(response);
-
             if(response.length > 0){
                 var td = '';
                 response.forEach(function(element, indice) {
-                    td += '<tr>'+
-                    '<td>'+element.nombre+'</td>'+
-                    '<td>'+element.descript+'</td>'+
-                    '<td>'+
-                    '<select class="form-control select-sm select2-no-search" id="row'+element.id+'" name="row'+element.id+'">';
+                    td +=  `<tr>
+                    <td>${element.nombre}</td>
+                    <td>${element.descript}</td>
+                    <td>${element.department_name}</td>
+                    <td>
+                    <select class="form-control select-sm select2-no-search" id="row'${element.id}'" name="row'${element.id}'">`;
                     if(element.estado == 'ACTIVO'){
-                        td +='<option value="ACTIVO" selected>ACTIVO</option>'+
-						'<option value="INACTIVO">INACTIVO</option>'
+                        td +=`<option value="ACTIVO" selected>ACTIVO</option>
+						<option value="INACTIVO">INACTIVO</option>`
                     } else{
-                        td +='<option value="ACTIVO" >ACTIVO</option>'+
-						'<option value="INACTIVO" selected>INACTIVO</option>'
+                        td +=`<option value="ACTIVO" >ACTIVO</option>
+						<option value="INACTIVO" selected>INACTIVO</option>`
                     }
                     
-                    td +='</select>'+
-                    '</td>'+
-                    // '<td>'+element.estado+'</td>'+
-                    '<td><a style="color: white" onclick="actualizafavorito('+element.id+')" data-placement="bottom" data-toggle="tooltip" title="Activar" class="btn ripple btn-success btn-icon">'+
-                    '<i class="si si-check"></i></td>'+
-                    '</tr>'      
+                    td += `</select>
+                    </td>
+                    <td><a style="color: white" onclick="actualizafavorito(${element.id})" data-placement="bottom" data-toggle="tooltip" title="Activar" class="btn ripple btn-success btn-icon">
+                    <i class="si si-check"></i></td>
+                    </tr>`      
                 });
                 
-               
                 document.getElementById("tbody").innerHTML = td
             }
         }
@@ -794,7 +840,9 @@ function addfavorito(id){
 
 function agregarFav(){
     var nombre = document.getElementById('favorito').value
-    var descript = document.getElementById('desc').value
+    var descript = document.getElementById('desc').value   
+    var department = document.getElementById('depto').value
+
     if(nombre == '' || descript == ''){
         swal("Ops!", "Debe llenar los campos", "error");
     }else{
@@ -804,6 +852,7 @@ function agregarFav(){
         formData.append('id', id); 
         formData.append('nombre', nombre); 
         formData.append('descript', descript); 
+        formData.append('department', department); 
         $.ajax({
             url: '/admin/addfavoritos',
             type: 'post',
@@ -864,4 +913,10 @@ function abrir(id){
 function abrir2(id){
     $('#modal-cant').modal('hide');
     $('#'+id).modal('show');
+}
+
+function closeModal(idModal){
+    const modalEl = document.getElementById(idModal);
+    const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+    modal.hide();
 }

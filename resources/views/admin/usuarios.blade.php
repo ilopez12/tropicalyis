@@ -16,7 +16,7 @@
     <div class="d-flex">
         <div class="justify-content-center">
 
-            <a class="btn btn-primary my-2 btn-icon-text" style="color: white" href="/admin/nuevouser">
+            <a class="btn btn-primary my-2 btn-icon-text" style="color: white" href="/admin/addUser">
               <i class="si si-user-follow mr-2"></i> Nuevo Usuario
             </a>
         </div>
@@ -31,9 +31,6 @@
                     <div class="col-lg-12">
                         <div class="card custom-card">
                             <div class="card-body">
-                                
-                                {{-- <div class="table-responsive">
-                                    <table id="example3" class="table table-striped table-bordered text-nowrap" > --}}
                                     <div class="table-responsive">
 									<table class="table" id="example2">
                                         <thead>
@@ -45,7 +42,7 @@
                                                 <th>Estado</th>
                                                 <th>Bloq/Desbloq</th>
                                                 <th>act/bloq-desbloq/desac-actv</th>
-                                                <th>Estado</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -55,16 +52,16 @@
                                                 <td>{{$key+1}}</td>
                                                 <td>{{$item->name}}</td>
                                                 <td>{{$item->email}}</td>
-                                                <td>{{$item->departamento}}</td>
+                                                <td>{{$item->department_name}}</td>
                                                 <td>{{$item->estatus}}</td>
                                                 @if ($item->bloqueo == 0 )
                                                 <td></td>
-                                                {{-- <td>Usuario </td> --}}
                                                 @else
                                                 <td>Usuario Bloqueado</td>
                                                 @endif
                                                 <td class="btn-icon-list">
-                                                    <a style="color: white"  onclick="cambiaPass('modal1', {{$item->email}}, {{$item->id}})" data-placement="bottom" data-toggle="tooltip" title="Actualizar" class="btn ripple btn-primary btn-icon"><i class="si si-note"></i></a>
+                                                    <a style="color: white"  onclick="updateUser('modal3', {{$item}}, {{$departments}})" data-placement="bottom" data-toggle="tooltip" title="Actualizar Usuario" class="btn ripple btn-primary btn-icon"><i class="si si-settings"></i></a>
+                                                    <a style="color: white"  onclick="cambiaPass('modal1', {{$item->email}}, {{$item->id}})" data-placement="bottom" data-toggle="tooltip" title="Actualizar contraseña" class="btn ripple btn-primary btn-icon"><i class="si si-note"></i></a>
                                                     @if ($item->bloqueo == 0 )
                                                         <a style="color: white" onclick="bloqueo({{$item->id}}, {{$item->bloqueo}})" data-placement="bottom" data-toggle="tooltip" title="Bloquear" class="btn ripple btn-danger btn-icon"><i class="si si-lock"></i></a>
                                                     @else
@@ -104,7 +101,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content modal-content-demo">
             <div class="modal-header">
-                <h6 class="modal-title">Actualizar Contraseña </h6><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
+                <h6 class="modal-title">Actualizar Contraseña </h6><button aria-label="Close" class="close" onclick="closeModal('modal1')" type="button"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 {{-- <div class="col-lg-3"> --}}
@@ -121,7 +118,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn ripple btn-success" onclick="actualizapass()" type="button" >Actualiza Contraseña</button>
-                <button class="btn ripple btn-secondary" data-dismiss="modal" type="button">Cerrar</button>
+                <button class="btn ripple btn-secondary" onclick="closeModal('modal1')" type="button">Cerrar</button>
             </div>
         </div>
     </div>
@@ -131,7 +128,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content modal-content-demo">
             <div class="modal-header">
-                <h6 class="modal-title">Favoritos</h6><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
+                <h6 class="modal-title">Favoritos</h6><button aria-label="Close" class="close" onclick="closeModal('modal2')" type="button"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
 
@@ -148,6 +145,14 @@
                                     <input aria-describedby="basic-addon2" aria-label="Favorito" name="favorito" id="favorito" class="form-control" placeholder="Nuevo Favorito" type="text">
                                 </div>
                                 <input type="hidden" id="id_principal">
+                                <div class="input-group mb-3">
+                                    <label class="form-label">Departamento:</label>
+                                    <select name="depto" id="depto" class="form-control select-lg select2">
+                                        @foreach( $departments as $key => $item)
+										    <option value="{{$item->id}}">{{$item->name}}</option>
+                                        @endforeach
+									</select>
+                                </div>
                                 <label class="form-label">Descripción:</label>
                                 <div class="input-group mb-3">
                                     <textarea  class="form-control"  name="desc" id="desc" cols="3" rows="3"></textarea>
@@ -170,6 +175,7 @@
                                             <tr>
                                                 <th>Nombre</th>
                                                 <th>Descripcion</th>
+                                                <th>Depto</th>
                                                 <th>Estatus</th>
                                                 <th>Ac</th>
                                             </tr>
@@ -184,18 +190,31 @@
                     </div>
                    
                 </div><!-- accordion -->
-
-              
-                    {{-- <label class="form-label">Nombre Favorito:</label>
-                    <div class="input-group mb-3">
-                        <input aria-describedby="basic-addon2" aria-label="Favorito" name="favorito" id="favorito" class="form-control" placeholder="Nuevo Favorito" type="text">
-                       
-           
-                    </div> --}}
                 <input type="hidden" name="id" id="id">
             </div>
             <div class="modal-footer">
-                <button class="btn ripple btn-secondary" data-dismiss="modal" type="button">Cerrar</button>
+                <button class="btn ripple btn-secondary" onclick="closeModal('modal2')" data-dismiss="modal2" type="button">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modal3">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-content-demo">
+            <div class="modal-header">
+                <h6 class="modal-title">Actualizar Usuario </h6><button aria-label="Close" class="close" onclick="closeModal('modal3')" type="button"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row" id="userInfo">
+                
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn ripple btn-success" onclick="actualizaUser()" type="button" >Actualiza Usuario</button>
+                <button class="btn ripple btn-secondary" onclick="closeModal('modal3')" type="button">Cerrar</button>
             </div>
         </div>
     </div>
